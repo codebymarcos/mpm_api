@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Mapas Mentais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #222;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2.2em;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-section h2 {
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #888;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #333;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: #222;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #666;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #555;
+        }
+
+        .result-section {
+            border-left: 4px solid #ddd;
+            padding-left: 20px;
+        }
+
+        .result-section h2 {
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            font-weight: 500;
+        }
+
+        .info-box {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .info-box strong {
+            color: #333;
+        }
+
+        .spinner {
+            display: none;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #333;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .status-success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #155724;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #721c24;
+        }
+
+        .preview-box {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        iframe {
+            width: 100%;
+            height: 400px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-buttons button {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .btn-view-window {
+            background: #333 !important;
+            color: white !important;
+            border: 2px solid #333 !important;
+            font-weight: 600;
+        }
+
+        .btn-view-window:hover {
+            background: #222 !important;
+            border-color: #222 !important;
+        }
+
+        .history {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #ddd;
+        }
+
+        .history h3 {
+            color: #555;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .history-item {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .history-item:hover {
+            background: #efefef;
+            transform: translateX(5px);
+        }
+
+        .history-item small {
+            display: block;
+            color: #999;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 Gerador de Mapas Mentais</h1>
+
+        <div class="content">
+            <!-- Formulário -->
+            <div class="form-section">
+                <h2>Novo Mapa</h2>
+                <form id="formMapa">
+                    <div class="form-group">
+                        <label for="tema">Tema:</label>
+                        <input 
+                            type="text" 
+                            id="tema" 
+                            name="tema" 
+                            placeholder="Ex: Inteligência Artificial, Python..."
+                            required
+                        >
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="btnGerar">
+                        Gerar Mapa Mental
+                    </button>
+                </form>
+
+                <div class="spinner" id="spinner"></div>
+
+                <!-- Histórico -->
+                <div class="history" id="historyContainer" style="display: none;">
+                    <h3>📋 Histórico</h3>
+                    <div id="historyList"></div>
+                </div>
+            </div>
+
+            <!-- Resultado -->
+            <div class="result-section">
+                <h2>Resultado</h2>
+                <div id="resultContainer">
+                    <div class="info-box">
+                        Preencha o formulário e clique em "Gerar Mapa Mental" para começar.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const formMapa = document.getElementById('formMapa');
+        const temaInput = document.getElementById('tema');
+        const btnGerar = document.getElementById('btnGerar');
+        const spinner = document.getElementById('spinner');
+        const resultContainer = document.getElementById('resultContainer');
+        const historyList = document.getElementById('historyList');
+        const historyContainer = document.getElementById('historyContainer');
+
+        let historyData = JSON.parse(localStorage.getItem('mapaHistory') || '[]');
+
+        // Carregar histórico ao iniciar
+        atualizarHistorico();
+
+        formMapa.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const tema = temaInput.value.trim();
+            if (!tema) {
+                mostrarErro('Por favor, digite um tema');
+                return;
+            }
+
+            btnGerar.disabled = true;
+            spinner.style.display = 'block';
+            resultContainer.innerHTML = '';
+
+            try {
+                const response = await fetch('/api/gerar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ tema })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    mostrarSucesso(data);
+                    adicionarAoHistorico({
+                        id: data.id,
+                        tema: data.tema,
+                        criado: data.criado
+                    });
+                    temaInput.value = '';
+                } else {
+                    mostrarErro(data.erro || 'Erro ao gerar mapa mental');
+                }
+            } catch (error) {
+                mostrarErro('Erro de conexão: ' + error.message);
+            } finally {
+                btnGerar.disabled = false;
+                spinner.style.display = 'none';
+            }
+        });
+
+        function mostrarSucesso(data) {
+            resultContainer.innerHTML = `
+                <div class="status-success">
+                    ✅ Mapa mental gerado com sucesso!
+                </div>
+                <div class="info-box">
+                    <strong>ID:</strong> ${data.id}<br>
+                    <strong>Tema:</strong> ${data.tema}<br>
+                    <strong>Arquivo:</strong> ${data.arquivo}<br>
+                    <strong>Tamanho:</strong> ${(data.tamanho / 1024).toFixed(2)} KB
+                </div>
+                <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+                    <p style="color: #666; margin-bottom: 10px; font-size: 0.9em;">📊 Preview do Mapa</p>
+                    <iframe id="mapaIframe" src="/api/preview/${data.id}"></iframe>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-view-window" onclick="abrirEmNovaAba('${data.id}')" title="Abrir visualizador em tela cheia em nova janela">
+                        🔍 Visualizar em Nova Janela
+                    </button>
+                    <button class="btn btn-secondary" onclick="baixarMapa('${data.id}')" title="Fazer download do arquivo HTML">
+                        📥 Baixar HTML
+                    </button>
+                </div>
+            `;
+        }
+
+        function mostrarErro(mensagem) {
+            resultContainer.innerHTML = `
+                <div class="status-error">
+                    ❌ ${mensagem}
+                </div>
+            `;
+        }
+
+        function baixarMapa(id) {
+            const link = document.createElement('a');
+            link.href = `/api/download/${id}`;
+            link.download = `mapa_mental_${id}.html`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function abrirEmNovaAba(id) {
+            window.open(`/api/preview/${id}`, '_blank');
+        }
+
+        function adicionarAoHistorico(data) {
+            historyData.unshift({
+                id: data.id,
+                tema: data.tema,
+                data: new Date().toLocaleString('pt-BR')
+            });
+            
+            // Manter apenas últimos 20 itens
+            historyData = historyData.slice(0, 20);
+            localStorage.setItem('mapaHistory', JSON.stringify(historyData));
+            atualizarHistorico();
+        }
+
+        function atualizarHistorico() {
+            if (historyData.length === 0) {
+                historyContainer.style.display = 'none';
+                return;
+            }
+
+            historyContainer.style.display = 'block';
+            historyList.innerHTML = historyData.map(item => `
+                <div class="history-item" onclick="carregarDoHistorico('${item.id}', '${item.tema}')">
+                    <strong>${item.tema}</strong>
+                    <small>${item.data}</small>
+                </div>
+            `).join('');
+        }
+
+        function carregarDoHistorico(id, tema) {
+            resultContainer.innerHTML = `
+                <div class="status-success">
+                    ✅ Mapa mental carregado do histórico
+                </div>
+                <div class="info-box">
+                    <strong>ID:</strong> ${id}<br>
+                    <strong>Tema:</strong> ${tema}
+                </div>
+                <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+                    <p style="color: #666; margin-bottom: 10px; font-size: 0.9em;">📊 Preview do Mapa</p>
+                    <iframe id="mapaIframe" src="/api/preview/${id}"></iframe>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-view-window" onclick="abrirEmNovaAba('${id}')" title="Abrir visualizador em tela cheia em nova janela">
+                        🔍 Visualizar em Nova Janela
+                    </button>
+                    <button class="btn btn-secondary" onclick="baixarMapa('${id}')" title="Fazer download do arquivo HTML">
+                        📥 Baixar HTML
+                    </button>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

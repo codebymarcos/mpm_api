@@ -1,0 +1,7 @@
+title: "Python"
+icon: "🐍"
+color: "#667eea"
+children:
+  - title: "Básico"
+    icon: "📚"
+    color: "#4CAF50"

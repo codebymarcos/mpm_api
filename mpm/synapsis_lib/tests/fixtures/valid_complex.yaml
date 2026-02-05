@@ -1,0 +1,42 @@
+title: "Inteligência Artificial"
+icon: "🤖"
+color: "#667eea"
+expanded: true
+children:
+  - title: "Machine Learning"
+    icon: "🧠"
+    color: "#4CAF50"
+    expanded: true
+    children:
+      - title: "Supervisionado"
+        icon: "📊"
+        color: "#8BC34A"
+        children:
+          - title: "Classificação"
+            icon: "🏷️"
+            color: "#AED581"
+          - title: "Regressão"
+            icon: "📈"
+            color: "#AED581"
+      - title: "Não Supervisionado"
+        icon: "🔍"
+        color: "#8BC34A"
+        children:
+          - title: "Clustering"
+            icon: "🎯"
+            color: "#AED581"
+  - title: "Deep Learning"
+    icon: "🔮"
+    color: "#2196F3"
+    expanded: true
+    children:
+      - title: "Redes Neurais"
+        icon: "🕸️"
+        color: "#64B5F6"
+        children:
+          - title: "CNN"
+            icon: "🖼️"
+            color: "#90CAF9"
+          - title: "RNN"
+            icon: "🔄"
+            color: "#90CAF9"
